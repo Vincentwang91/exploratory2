@@ -12,3 +12,10 @@ Baltimore <- NEI[NEI$fips == "24510",]
 Baltimoresum <- tapply(Baltimore$Emissions,Baltimore$year,sum)
 plot( as.numeric(names(Baltimoresum)),Baltimoresum,
       type = "l", xlab= "Year", ylab="Baltimore Total Emission")
+## question 3
+Baltimore <- NEI[NEI$fips == "24510",]
+Baltimoresum <- aggregate(Emissions ~ year + type,data=Baltimore,sum)
+qplot( as.numeric(row.names(Baltimoresum))),Baltimoresum,
+      type = "l", xlab= "Year", ylab="Baltimore Total Emission")
+g <- qplot(year,Emissions,data=a,colour=factor(type),type = "l")
+g + geom_point() +stat_smooth()
