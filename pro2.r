@@ -32,6 +32,30 @@ NEISCCsum <- aggregate(Emissions ~ year + SCC,data=NEISCC,sum)
 g <-qplot(year,Emissions,data=NEISCCsum,colour=factor(SCC),type = "l")
 g + geom_point() +stat_smooth()
 
+## question 5
+Motor <- function(fipsx = "06037"){
+  Logical <- grepl("[Mm]otor",SCC$Short.Name)
+  Location <- NEI[NEI$fips == fipsx,]
+  NEISCC <- Location[Location$SCC %in% SCC$SCC[Logical],]
+  Name<- cbind(as.character(SCC$SCC[Logical]),
+                 as.character(SCC$Short.Name[Logical]))
+  
+#   NEISCC$SCC <- factor(NEISCC$SCC,
+#                        levels=Name[,1],
+#                        labels=Name[,2])
+  NEISCCsum <- aggregate(Emissions ~ year,data=NEISCC,sum)
+  return(NEISCCsum)
+}
+NEISCCsum <- Motor("24510")
+  g <-qplot(year,Emissions,data=NEISCCsum,type = "l")
+  g + geom_point() +stat_smooth()
 
+## question 6
+NEISCCBaltimore <- Motor("24510")
+NEISCCCAL <- Motor("06037")
+NEISCCsum <- rbind(cbind(NEISCCBaltimore,Location="Baltimore"),
+                   cbind(NEISCCCAL,Location="Los Angeles"))
+g <-qplot(year,Emissions,data=NEISCCsum,colour=factor(Location),type = "l")
 
+g + geom_point() +stat_smooth()
 
